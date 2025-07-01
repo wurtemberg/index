@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Controle LED</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+  <h2>Controle do LED</h2>
+  <button onclick="ligar()">Ligar</button>
+  <button onclick="desligar()">Desligar</button>
+
+  <script>
+   const firebaseConfig = {
+  apiKey: "AIzaSyBV590HnWO3f1SM6ZQJ_V2rpOqe30N8jMw",
+  authDomain: "ligar-led-a8c3f.firebaseapp.com",
+  databaseURL: "https://ligar-led-a8c3f-default-rtdb.firebaseio.com",
+  projectId: "ligar-led-a8c3f",
+  storageBucket: "ligar-led-a8c3f.firebasestorage.app",
+  messagingSenderId: "1015882380101",
+  appId: "1:1015882380101:web:6f9bd1426aad71f275042c"
+};
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function ligar() {
+      db.ref("/led").set(true);
+    }
+
+    function desligar() {
+      db.ref("/led").set(false);
+    }
+  </script>
+</body>
+</html>
