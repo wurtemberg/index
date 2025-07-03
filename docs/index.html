@@ -1,36 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Controle LED</title>
+  <meta charset="UTF-8">
+  <title>Joysticks Virtuais</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .joystick {
+      margin-bottom: 30px;
+    }
+    .slider {
+      width: 300px;
+    }
+    .botao {
+      padding: 8px 20px;
+      margin-left: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h2>Controle do LED</h2>
-  <button onclick="ligar()">Ligar</button>
-  <button onclick="desligar()">Desligar</button>
+  <h2>Controle de Joysticks</h2>
+
+  <div class="joystick">
+    <label>Joystick 1: <span id="val1">512</span></label><br>
+    <input type="range" min="0" max="1023" value="512" class="slider" id="js1Slider" oninput="atualizarValor('js1', this.value)">
+    <button class="botao" id="btnJS1" onclick="alternarAtivo('js1')">Bloquear</button>
+  </div>
+
+  <div class="joystick">
+    <label>Joystick 2: <span id="val2">512</span></label><br>
+    <input type="range" min="0" max="1023" value="512" class="slider" id="js2Slider" oninput="atualizarValor('js2', this.value)">
+    <button class="botao" id="btnJS2" onclick="alternarAtivo('js2')">Bloquear</button>
+  </div>
+
+  <div class="joystick">
+    <label>Joystick 3: <span id="val3">512</span></label><br>
+    <input type="range" min="0" max="1023" value="512" class="slider" id="js3Slider" oninput="atualizarValor('js3', this.value)">
+    <button class="botao" id="btnJS3" onclick="alternarAtivo('js3')">Bloquear</button>
+  </div>
 
   <script>
-   const firebaseConfig = {
-  apiKey: "AIzaSyBV590HnWO3f1SM6ZQJ_V2rpOqe30N8jMw",
-  authDomain: "ligar-led-a8c3f.firebaseapp.com",
-  databaseURL: "https://ligar-led-a8c3f-default-rtdb.firebaseio.com",
-  projectId: "ligar-led-a8c3f",
-  storageBucket: "ligar-led-a8c3f.firebasestorage.app",
-  messagingSenderId: "1015882380101",
-  appId: "1:1015882380101:web:6f9bd1426aad71f275042c"
-};
+    // Config Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBV590HnWO3f1SM6ZQJ_V2rpOqe30N8jMw",
+      authDomain: "ligar-led-a8c3f.firebaseapp.com",
+      databaseURL: "https://ligar-led-a8c3f-default-rtdb.firebaseio.com",
+      projectId: "ligar-led-a8c3f",
+      storageBucket: "ligar-led-a8c3f.appspot.com",
+      messagingSenderId: "1015882380101",
+      appId: "1:1015882380101:web:6f9bd1426aad71f275042c"
+    };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    function ligar() {
-      db.ref("/led").set(true);
+    function atualizarValor(js, valor) {
+      document.getElementById("val" + js[2]).innerText = valor;
+      db.ref("joysticks/" + js + "/valor").set(parseInt(valor));
     }
 
-    function desligar() {
-      db.ref("/led").set(false);
+    function alternarAtivo(js) {
+      const ref = db.ref("joysticks/" + js + "/ativo");
+      ref.once("value").then(snapshot => {
+        const atual = snapshot.val();
+        const novo = !atual;
+        ref.set(novo);
+      });
     }
+
+    function monitorarBotao(js) {
+      const ref = db.ref("joysticks/" + js + "/ativo");
+      ref.on("value", snapshot => {
+        const ativo = snapshot.val();
+        const btn = document.getElementById("btn" + js.toUpperCase());
+        btn.textContent = ativo ? "Bloquear" : "Desbloquear";
+        btn.style.backgroundColor = ativo ? "#4CAF50" : "#f44336";
+        btn.style.color = "#fff";
+        document.getElementById(js + "Slider").disabled = !ativo;
+      });
+    }
+
+    // Ativa os botões e sliders com estado ao vivo
+    monitorarBotao("js1");
+    monitorarBotao("js2");
+    monitorarBotao("js3");
   </script>
 </body>
 </html>
