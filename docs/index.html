@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Controle de LED - Firebase</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -28,7 +28,7 @@
     }
 
     .ligar {
-      background-color: #4CAF50;
+      background-color: #4caf50;
       color: white;
     }
 
@@ -54,18 +54,18 @@
   <button class="botao desligar" onclick="desligarLED()">DESLIGAR</button>
 
   <script>
-    // 🔧 CONFIGURAÇÕES DO FIREBASE
+    // CONFIGURAÇÃO FIREBASE - coloque seu Firebase config completo aqui
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
+      apiKey: "SUA_API_KEY_AQUI",
       authDomain: "SEU_PROJETO.firebaseapp.com",
-      databaseURL: "https://SEU_PROJETO.firebaseio.com",
+      databaseURL: "https://ligar-led-a8c3f-default-rtdb.firebaseio.com",
       projectId: "SEU_PROJETO",
       storageBucket: "SEU_PROJETO.appspot.com",
       messagingSenderId: "000000000000",
       appId: "1:000000000000:web:abc123"
     };
 
-    // 🔄 INICIALIZA O FIREBASE
+    // Inicializa Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
@@ -81,5 +81,6 @@
       });
     }
   </script>
+
 </body>
 </html>
