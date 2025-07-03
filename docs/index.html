@@ -1,149 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Controle de Joystick Manual/Automático</title>
+  <meta charset="UTF-8">
+  <title>Controle de LED - Firebase</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f3f3f3;
+      padding-top: 50px;
     }
-    .joystick {
-      margin-bottom: 25px;
+
+    h1 {
+      color: #333;
     }
-    .slider {
-      width: 300px;
-    }
-    #btnModo {
-      padding: 10px 25px;
-      font-size: 18px;
-      cursor: pointer;
+
+    .botao {
+      font-size: 40px;
+      padding: 30px 60px;
+      margin: 20px;
       border: none;
-      border-radius: 6px;
-      color: white;
-      margin-bottom: 30px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
     }
-    #btnModo.manual {
+
+    .ligar {
       background-color: #4CAF50;
+      color: white;
     }
-    #btnModo.automatico {
+
+    .ligar:hover {
+      background-color: #45a049;
+    }
+
+    .desligar {
       background-color: #f44336;
+      color: white;
+    }
+
+    .desligar:hover {
+      background-color: #da190b;
     }
   </style>
 </head>
 <body>
-  <h2>Controle de Joysticks (Manual / Automático)</h2>
 
-  <button id="btnModo" onclick="toggleModo()">Carregando...</button>
+  <h1>Controle de LED via Firebase</h1>
 
-  <div class="joystick">
-    <label>Joystick 1: <span id="val1">512</span></label><br />
-    <input
-      type="range"
-      min="0"
-      max="1023"
-      value="512"
-      class="slider"
-      id="js1Slider"
-      oninput="atualizarValor('js1', this.value)"
-    />
-  </div>
-
-  <div class="joystick">
-    <label>Joystick 2: <span id="val2">512</span></label><br />
-    <input
-      type="range"
-      min="0"
-      max="1023"
-      value="512"
-      class="slider"
-      id="js2Slider"
-      oninput="atualizarValor('js2', this.value)"
-    />
-  </div>
-
-  <div class="joystick">
-    <label>Joystick 3: <span id="val3">512</span></label><br />
-    <input
-      type="range"
-      min="0"
-      max="1023"
-      value="512"
-      class="slider"
-      id="js3Slider"
-      oninput="atualizarValor('js3', this.value)"
-    />
-  </div>
+  <button class="botao ligar" onclick="ligarLED()">LIGAR</button>
+  <button class="botao desligar" onclick="desligarLED()">DESLIGAR</button>
 
   <script>
-    // Configuração Firebase
+    // 🔧 CONFIGURAÇÕES DO FIREBASE
     const firebaseConfig = {
-      apiKey: "AIzaSyBV590HnWO3f1SM6ZQJ_V2rpOqe30N8jMw",
-      authDomain: "ligar-led-a8c3f.firebaseapp.com",
-      databaseURL: "https://ligar-led-a8c3f-default-rtdb.firebaseio.com",
-      projectId: "ligar-led-a8c3f",
-      storageBucket: "ligar-led-a8c3f.appspot.com",
-      messagingSenderId: "1015882380101",
-      appId: "1:1015882380101:web:6f9bd1426aad71f275042c",
+      apiKey: "SUA_API_KEY",
+      authDomain: "SEU_PROJETO.firebaseapp.com",
+      databaseURL: "https://SEU_PROJETO.firebaseio.com",
+      projectId: "SEU_PROJETO",
+      storageBucket: "SEU_PROJETO.appspot.com",
+      messagingSenderId: "000000000000",
+      appId: "1:000000000000:web:abc123"
     };
 
+    // 🔄 INICIALIZA O FIREBASE
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const database = firebase.database();
 
-    // Atualiza valor do slider no Firebase
-    function atualizarValor(js, valor) {
-      document.getElementById("val" + js[2]).innerText = valor;
-      db.ref("joysticks/" + js + "/valor").set(parseInt(valor));
-    }
-
-    // Alterna modo manual/automático no Firebase
-    function toggleModo() {
-      const ref = db.ref("controle/modo");
-      ref.once("value").then((snapshot) => {
-        const modoAtual = snapshot.val() || "manual";
-        const novoModo = modoAtual === "manual" ? "automatico" : "manual";
-        ref.set(novoModo);
+    function ligarLED() {
+      database.ref("/").update({
+        led: true
       });
     }
 
-    // Atualiza o botão conforme o modo no Firebase
-    function monitorarModo() {
-      const ref = db.ref("controle/modo");
-      ref.on("value", (snapshot) => {
-        const modo = snapshot.val() || "manual";
-        const btn = document.getElementById("btnModo");
-        if (modo === "manual") {
-          btn.textContent = "Modo Manual (Joystick Físico Ativo)";
-          btn.className = "manual";
-          // Desativa sliders
-          document.getElementById("js1Slider").disabled = true;
-          document.getElementById("js2Slider").disabled = true;
-          document.getElementById("js3Slider").disabled = true;
-        } else {
-          btn.textContent = "Modo Automático (Controle Remoto Ativo)";
-          btn.className = "automatico";
-          // Ativa sliders
-          document.getElementById("js1Slider").disabled = false;
-          document.getElementById("js2Slider").disabled = false;
-          document.getElementById("js3Slider").disabled = false;
-        }
+    function desligarLED() {
+      database.ref("/").update({
+        led: false
       });
     }
-
-    // Inicializa monitoramento
-    monitorarModo();
-
-    // Inicializa valores no Firebase caso não existam
-    ["js1", "js2", "js3"].forEach((js) => {
-      const refValor = db.ref("joysticks/" + js + "/valor");
-      refValor.once("value").then((snapshot) => {
-        if (snapshot.val() === null) {
-          refValor.set(512); // valor central padrão
-        }
-      });
-    });
   </script>
 </body>
 </html>
