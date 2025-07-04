@@ -10,19 +10,31 @@
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #f3f3f3;
-      padding-top: 50px;
+      padding-top: 30px;
     }
 
     h1 {
       color: #333;
     }
 
+    .lampada {
+      width: 150px;
+      height: auto;
+      margin: 30px auto;
+      transition: opacity 0.3s ease;
+    }
+
+    .estado {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
     .botao {
-      font-size: 40px;
-      padding: 30px 60px;
-      margin: 20px;
+      font-size: 24px;
+      padding: 15px 40px;
+      margin: 10px;
       border: none;
-      border-radius: 15px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
@@ -48,13 +60,18 @@
 </head>
 <body>
 
-  <h1>Controle de LED via Firebase</h1>
+  <h1>Supervisório de Controle de LED</h1>
 
-  <button class="botao ligar" onclick="ligarLED()">LIGAR</button>
-  <button class="botao desligar" onclick="desligarLED()">DESLIGAR</button>
+  <div class="estado" id="estadoTexto">Carregando estado...</div>
+  <img id="imgLampada" class="lampada" src="https://i.imgur.com/0XkK1vF.png" alt="Lâmpada">
+
+  <div>
+    <button class="botao ligar" onclick="ligarLED()">LIGAR</button>
+    <button class="botao desligar" onclick="desligarLED()">DESLIGAR</button>
+  </div>
 
   <script>
-    // CONFIGURAÇÃO FIREBASE - coloque seu Firebase config completo aqui
+    // CONFIGURAÇÃO DO FIREBASE
     const firebaseConfig = {
       apiKey: "SUA_API_KEY_AQUI",
       authDomain: "SEU_PROJETO.firebaseapp.com",
@@ -69,16 +86,32 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // Referência do LED
+    const ledRef = database.ref("/led");
+    const imgLampada = document.getElementById("imgLampada");
+    const estadoTexto = document.getElementById("estadoTexto");
+
+    // Escuta alterações no Firebase em tempo real
+    ledRef.on("value", (snapshot) => {
+      const estado = snapshot.val();
+      if (estado === true) {
+        imgLampada.src = "https://i.imgur.com/0XkK1vF.png"; // Lâmpada acesa
+        estadoTexto.innerText = "LED LIGADO";
+        estadoTexto.style.color = "#4caf50";
+      } else {
+        imgLampada.src = "https://i.imgur.com/Bf2H9sN.png"; // Lâmpada apagada
+        estadoTexto.innerText = "LED DESLIGADO";
+        estadoTexto.style.color = "#f44336";
+      }
+    });
+
+    // Funções de controle
     function ligarLED() {
-      database.ref("/").update({
-        led: true
-      });
+      ledRef.set(true);
     }
 
     function desligarLED() {
-      database.ref("/").update({
-        led: false
-      });
+      ledRef.set(false);
     }
   </script>
 
