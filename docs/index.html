@@ -88,18 +88,19 @@
     const imgLampada = document.getElementById("imgLampada");
     const estadoTexto = document.getElementById("estadoTexto");
 
-    ledRef.on("value", (snapshot) => {
-      const estado = snapshot.val();
-      if (estado === true) {
-        imgLampada.src = "images/download.jpg"; // Lâmpada ligada
-        estadoTexto.innerText = "LED LIGADO";
-        estadoTexto.style.color = "#4caf50";
-      } else {
-        imgLampada.src = "images/download.jpg"; // Lâmpada desligada (mesma imagem neste exemplo)
-        estadoTexto.innerText = "LED DESLIGADO";
-        estadoTexto.style.color = "#f44336";
-      }
-    });
+ledRef.on("value", (snapshot) => {
+  const estado = snapshot.val();
+  if (estado === true) {
+    imgLampada.src = "images/download.jpg"; // LED ligado
+    estadoTexto.innerText = "LED LIGADO";
+    estadoTexto.style.color = "#4caf50";
+  } else {
+    imgLampada.src = "images/download (1).jpg"; // LED desligado
+    estadoTexto.innerText = "LED DESLIGADO";
+    estadoTexto.style.color = "#f44336";
+  }
+});
+
 
     function ligarLED() {
       ledRef.set(true);
