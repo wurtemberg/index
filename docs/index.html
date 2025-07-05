@@ -63,7 +63,7 @@
   <h1>Supervisório de Controle de LED</h1>
 
   <div class="estado" id="estadoTexto">Carregando estado...</div>
-  <img id="imgLampada" class="lampada" src="images/download.jpg" alt="Lâmpada">
+  <img id="imgLampada" class="lampada" src="images/download%20(1).jpg" alt="Lâmpada">
 
   <div>
     <button class="botao ligar" onclick="ligarLED()">LIGAR</button>
@@ -88,19 +88,18 @@
     const imgLampada = document.getElementById("imgLampada");
     const estadoTexto = document.getElementById("estadoTexto");
 
-ledRef.on("value", (snapshot) => {
-  const estado = snapshot.val();
-  if (estado === true) {
-    imgLampada.src = "images/download.jpg"; // LED ligado
-    estadoTexto.innerText = "LED LIGADO";
-    estadoTexto.style.color = "#4caf50";
-  } else {
-    imgLampada.src = "images/download (1).jpg"; // LED desligado
-    estadoTexto.innerText = "LED DESLIGADO";
-    estadoTexto.style.color = "#f44336";
-  }
-});
-
+    ledRef.on("value", (snapshot) => {
+      const estado = snapshot.val();
+      if (estado === true) {
+        imgLampada.src = "images/download.jpg"; // LED ligado
+        estadoTexto.innerText = "LED LIGADO";
+        estadoTexto.style.color = "#4caf50";
+      } else {
+        imgLampada.src = "images/download%20(1).jpg"; // LED desligado (com %20 no lugar do espaço)
+        estadoTexto.innerText = "LED DESLIGADO";
+        estadoTexto.style.color = "#f44336";
+      }
+    });
 
     function ligarLED() {
       ledRef.set(true);
