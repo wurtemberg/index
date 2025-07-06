@@ -63,7 +63,13 @@
   <h1>Supervisório de Controle de LED</h1>
 
   <div class="estado" id="estadoTexto">Carregando estado...</div>
-  <img id="imgLampada" class="lampada" src="images/download%20(1).jpg" alt="Lâmpada">
+  <!-- Imagem inicial: LED desligado -->
+  <img
+    id="imgLampada"
+    class="lampada"
+    src="https://github.com/wurtemberg/index/raw/main/images/download%20(1).jpg?raw=true"
+    alt="Lâmpada Desligada"
+  >
 
   <div>
     <button class="botao ligar" onclick="ligarLED()">LIGAR</button>
@@ -81,6 +87,7 @@
       appId: "1:000000000000:web:abc123"
     };
 
+    // Inicializa Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
@@ -91,11 +98,13 @@
     ledRef.on("value", (snapshot) => {
       const estado = snapshot.val();
       if (estado === true) {
-        imgLampada.src = "images/download.jpg"; // LED ligado
+        // LED ligado: usar download.jpg
+        imgLampada.src = "https://github.com/wurtemberg/index/raw/main/images/download.jpg?raw=true";
         estadoTexto.innerText = "LED LIGADO";
         estadoTexto.style.color = "#4caf50";
       } else {
-        imgLampada.src = "images/download%20(1).jpg"; // LED desligado (com %20 no lugar do espaço)
+        // LED desligado: usar download (1).jpg
+        imgLampada.src = "https://github.com/wurtemberg/index/raw/main/images/download%20(1).jpg?raw=true";
         estadoTexto.innerText = "LED DESLIGADO";
         estadoTexto.style.color = "#f44336";
       }
